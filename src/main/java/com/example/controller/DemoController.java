@@ -11,8 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class DemoController {
     private final Logger LOG = LoggerFactory.getLogger(DemoController.class);
 
-    @GetMapping
-    public void demo(){
+    @GetMapping("/ok")
+    public void ok(){
         LOG.info("Using thread {}", Thread.currentThread().getId());
+    }
+
+    @GetMapping("/nok")
+    public void demo(){
+        LOG.error("Using thread {}", Thread.currentThread().getId());
     }
 }

@@ -12,7 +12,7 @@ services:
     ports:
       - 3000:3000
     networks:
-      - metrics
+      - demo
 
   prometheus:
     image: prom/prometheus
@@ -29,7 +29,7 @@ services:
     ports:
       - 9090:9090
     networks:
-      - metrics
+      - demo
 
   loki:
     image: grafana/loki:2.8.0
@@ -38,21 +38,12 @@ services:
     volumes:
       - $HOME/.loki/config:/etc/loki
     command:
-      - '--config.file=/etc/loki/local-config.yaml'
+      - '--config.file=/etc/loki/loki.yml'
     ports:
       - 3100:3100
     networks:
-      - metrics
-
-  spring-boot:
-    build: .
-    container_name: demo
-    restart: unless-stopped
-    ports:
-      - 8080:8080
-    networks:
-      - metrics
+      - demo
 
 networks:
-  metrics:
+  demo:
     driver: bridge

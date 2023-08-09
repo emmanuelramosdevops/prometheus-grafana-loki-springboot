@@ -1,9 +1,29 @@
-FROM gradle:8.2.1-jdk17-alpine AS build
-WORKDIR /opt/app
-COPY . .
-RUN gradle build -x test --no-daemon
+#Build
+FROM gradle:8.1.1-jdk17-alpine AS Build
 
-FROM openjdk:17-jdk-alpine
 WORKDIR /opt/app
-COPY --from=build /opt/app/build/libs/*.jar /opt/app/spring-boot-application.jar
-ENTRYPOINT ["java", "-jar", "/opt/app/spring-boot-application.jar"]
+
+COPY build.gradle settings.gradle .
+
+COPY src src
+
+RUN gradle bootJar -x test --no-daemon
+
+
+# Run
+FROM openjdk:17-jdk-alpine
+
+RUN \
+    apk update && \
+    apk upgrade
+
+WORKDIR /opt
+
+COPY --from=Build /opt/app/build/libs/*.jar /opt
+
+RUN \
+    adduser -D 10001
+
+USER 10001
+
+ENTRYPOINT ["sh", "-c", "java -jar /opt/*.jar"]

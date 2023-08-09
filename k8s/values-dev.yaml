@@ -1,0 +1,14 @@
+---
+env: dev
+namespace: demo-dev
+image:
+  pullPolicy: IfNotPresent
+  repository: demo/demo-api
+  tag: dev-v1
+container:
+  port: 8080
+deployment:
+  revisionHistoryLimit: 3
+  replicas: 2
+service:
+  port: 80
